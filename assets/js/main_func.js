@@ -17,7 +17,84 @@ loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
 
-//Favorite Feauture
+// Sign In and Sign Up Validation
+const signUpBtn = document.querySelector('form:first-child button');
+const signInBtn = document.querySelector('form:last-child button');
+const emailInput = document.querySelector('form:first-child input[type="email"]');
+const signInEmailInput = document.querySelector('form:last-child input[type="email"]');
+const passwordInput = document.querySelector('form:first-child input[type="password"]:first-child');
+const confirmPasswordInput = document.querySelector('form:first-child input[type="password"]:last-child');
+const signInPasswordInput = document.querySelector('form:last-child input[type="password"]');
+
+signUpBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const nameValue = nameInput.value;
+  const emailValue = emailInput.value;
+  const passwordValue = passwordInput.value;
+  const confirmPasswordValue = confirmPasswordInput.value;
+
+  if (!validateName(nameValue)) {
+    alert('Invalid name. Please enter a valid name.');
+    return;
+  }
+
+  if (!validateEmail(emailValue)) {
+    alert('Invalid email. Only @gmail.com, @yahoo.com, @outlook.com, @hotmail.com, and @aol.com are allowed.');
+    return;
+  }
+
+  if (!validatePassword(passwordValue)) {
+    alert('Invalid password. Must contain at least 1 uppercase letter, 1 special character, and 1 digit.');
+    return;
+  }
+
+  if (passwordValue!== confirmPasswordValue) {
+    alert('Passwords do not match. Please enter the same password in both fields.');
+    passwordInput.value = '';
+    confirmPasswordInput.value = '';
+    passwordInput.focus();
+    return;
+  }
+
+  // If all validations pass, reload the page
+  window.location.reload();
+});
+
+signInBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const signInEmailValue = signInEmailInput.value;
+  const signInPasswordValue = signInPasswordInput.value;
+
+  if (!validateEmail(signInEmailValue)) {
+    alert('Invalid email. Only @gmail.com, @yahoo.com, @outlook.com, @hotmail.com, and @aol.com are allowed.');
+    return;
+  }
+
+  if (!validatePassword(signInPasswordValue)) {
+    alert('Invalid password. Must contain at least 1 uppercase letter, 1 special character, and 1 digit.');
+    return;
+  }
+
+  window.location.reload();
+});
+
+function validateEmail(email) {
+  const allowedDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com'];
+  const emailParts = email.split('@');
+  const domain = emailParts[1];
+
+  return allowedDomains.includes(domain);
+}
+
+function validatePassword(password) {
+  const uppercaseRegex = /[A-Z]/;
+  const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+  const digitRegex = /\d/;
+
+  return uppercaseRegex.test(password) && specialCharRegex.test(password) && digitRegex.test(password);
+}
+
+// Favorite Feature
 const heart = document.querySelector('.heart');
 
 heart.addEventListener('mouseover', () => {
@@ -36,49 +113,3 @@ heart.addEventListener('click', () => {
     heart.classList.add('fa-bounce');
   }
 });
-
-// Initialize Owl Carousel
-$(document).ready(function() {
-  $('.owl-carousel').owlCarousel({
-    loop: true,
-    margin: 10,
-    nav: false,
-    dots: false,
-    responsive: {
-      0: {
-        items: 3
-      }
-    }
-  });
-});
-
-// FAQs 
-/*=============== QUESTIONS ACCORDION ===============*/
-const accordionItems = document.querySelectorAll('.questions__item')
-
-accordionItems.forEach((item) =>{
-    const accordionHeader = item.querySelector('.questions__header')
-
-    accordionHeader.addEventListener('click', () =>{
-        const openItem = document.querySelector('.accordion-open')
-
-        toggleItem(item)
-
-        if(openItem && openItem!== item){
-            toggleItem(openItem)
-        }
-    })
-})
-
-const toggleItem = (item) =>{
-    const accordionContent = item.querySelector('.questions__content')
-
-    if(item.classList.contains('accordion-open')){
-        accordionContent.removeAttribute('style')
-        item.classList.remove('accordion-open')
-    }else{
-        accordionContent.style.height = accordionContent.scrollHeight + 'px'
-        item.classList.add('accordion-open')
-    }
-
-}
